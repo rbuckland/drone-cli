@@ -61,7 +61,10 @@ func NewClientTokenTLS(uri, token string, c *tls.Config) Client {
 	config := new(oauth2.Config)
 	auther := config.Client(oauth2.NoContext, &oauth2.Token{AccessToken: token})
 	if c != nil {
-		auther.Transport.(*oauth2.Transport).Base = &http.Transport{TLSClientConfig: c}
+		auther.Transport.(*oauth2.Transport).Base = &http.Transport{
+			TLSClientConfig: c,
+			Proxy: http.ProxyFromEnvironment,
+		}
 	}
 	return &client{auther, uri}
 }
